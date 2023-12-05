@@ -1,0 +1,24 @@
+{# templates/upcoming_movies/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Upcoming Movies</h1>
+    {% if data.error is defined %}
+        <p>Error: {{ data.error }}</p>
+    {% else %}
+        {% for movie in data.results %}
+            <p>{{ movie.titleText.text }}</p>
+            {% if movie.primaryImage %}
+                <img src="{{ movie.primaryImage.url }}" alt="{{ movie.titleText.text }}" style="max-width: 15em;">
+            {% else %}
+                <p>Image not available</p>
+            {% endif %}
+        {% endfor %}
+
+        {# Pagination Controls #}
+        <div class="pagination">
+            <a href="{{ path('app_upcoming_movies', {'page': currentPage - 1}) }}">Previous</a>
+            <a href="{{ path('app_upcoming_movies', {'page': currentPage + 1}) }}">Next</a>
+        </div>
+    {% endif %}
+{% endblock %}
