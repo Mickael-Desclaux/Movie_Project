@@ -16,19 +16,23 @@ class MovieDatabaseService
         $this->apiKey = $apiKey;
     }
 
-    public function getUpcomingMovies($page = 1)
+    public function apiRequest(string $method, string $url, array $options = [], int $page = 1)
     {
+        $url = "$url?page=$page";
+
         try {
-            $response = $this->client->request('GET', "https://moviesdatabase.p.rapidapi.com/titles/x/upcoming?page=$page", [
+            $response = $this->client->request($method, $url, array_merge([
                 'headers' => [
                     'X-RapidAPI-Host' => 'moviesdatabase.p.rapidapi.com',
                     'X-RapidAPI-Key' => $this->apiKey,
                 ],
-            ]);
+            ], $options));
 
             return json_decode($response->getBody(), true);
         } catch (GuzzleException $e) {
             return ['error' => $e->getMessage()];
         }
     }
+
 }
+

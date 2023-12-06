@@ -21,7 +21,7 @@ class UpcomingMoviesController extends AbstractController
     public function upcomingMovies(Request $request): Response
     {
         $page = $request->query->get('page', 1);
-        $data = $this->movieService->getUpcomingMovies($page);
+        $data = $this->movieService->apiRequest('GET', 'https://moviesdatabase.p.rapidapi.com/titles/x/upcoming', [], $page);
 
         return $this->render('upcoming_movies/index.html.twig', [
             'data' => $data,
