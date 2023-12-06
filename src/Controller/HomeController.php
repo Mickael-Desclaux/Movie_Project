@@ -2,13 +2,13 @@
 
 namespace App\Controller;
 
+use App\Service\MovieDatabaseService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\MovieDatabaseService;
 
-class UpcomingMoviesController extends AbstractController
+class HomeController extends AbstractController
 {
     private MovieDatabaseService $movieService;
 
@@ -17,13 +17,16 @@ class UpcomingMoviesController extends AbstractController
         $this->movieService = $movieService;
     }
 
-    #[Route('/upcoming/movies', name: 'upcoming_movies')]
+    #[Route('/', name: 'home')]
     public function upcomingMovies(Request $request): Response
     {
         $page = $request->query->get('page', 1);
-        $data = $this->movieService->apiRequest('GET', 'https://moviesdatabase.p.rapidapi.com/titles/x/upcoming', [], $page);
+        $params = [
+            'year' => '2023'
+        ];
+        $data = $this->movieService->apiRequest('GET', 'https://moviesdatabase.p.rapidapi.com/titles', $params, $page);
 
-        return $this->render('upcoming_movies/index.html.twig', [
+        return $this->render('home/index.html.twig', [
             'data' => $data,
             'currentPage' => $page,
         ]);
